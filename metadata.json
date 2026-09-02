@@ -1,0 +1,6 @@
+{
+  "name": "Agentic AI For Smart Facility Operations And Optimizations",
+  "description": "Agentic AI Platform for Smart Facility Operations and Optimizations. Complete enterprise platform implementing Milestone 1 (Energy Intelligence & Tariff Optimization), Milestone 2 (Predictive Maintenance System), Milestone 3 (Occupancy & Security Intelligence), and Milestone 4 (Cost Optimization & Enterprise Deployment).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
