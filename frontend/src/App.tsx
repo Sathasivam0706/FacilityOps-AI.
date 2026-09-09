@@ -79,22 +79,22 @@ export const App: React.FC = () => {
     }).catch(() => {});
   }, []);
 
-  // Real Dedicated Full-Page Login Portal
+  // Normal Dedicated Full-Page Login
   if (!user || activeTab === 'login') {
     return (
-      <div className="relative min-h-screen bg-slate-950">
+      <div className="relative min-h-screen bg-slate-100">
         {user && (
-          <div className="bg-slate-900 border-b border-slate-800 text-xs px-6 py-2.5 flex items-center justify-between text-slate-300 z-50">
+          <div className="bg-slate-900 text-xs px-6 py-2.5 flex items-center justify-between text-slate-300 z-50">
             <div className="flex items-center space-x-2">
               <span className="font-bold text-white">Active Session:</span>
               <span className="text-cyan-400 font-semibold">{user.name}</span>
-              <span className="text-slate-500">({user.role})</span>
+              <span className="text-slate-400">({user.role})</span>
             </div>
             <button
               onClick={() => setActiveTab('executive-hub')}
-              className="px-3.5 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-lg transition-colors cursor-pointer text-xs flex items-center space-x-1.5 shadow-xs"
+              className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-lg transition-colors cursor-pointer text-xs flex items-center space-x-1.5 shadow-xs"
             >
-              <span>Return to Facility Dashboard</span>
+              <span>Return to Dashboard</span>
               <span>&rarr;</span>
             </button>
           </div>
@@ -102,16 +102,6 @@ export const App: React.FC = () => {
         <LoginPage
           onLoginSuccess={(loggedInUser) => {
             setUser(loggedInUser);
-            setActiveTab('executive-hub');
-          }}
-          onExploreDemo={() => {
-            const guestUser = {
-              name: 'Sarah Jenkins',
-              email: 's.jenkins@apexhighrise.com',
-              role: 'Facility Manager',
-            };
-            localStorage.setItem('facilityops_user', JSON.stringify(guestUser));
-            setUser(guestUser);
             setActiveTab('executive-hub');
           }}
           currentFacility={selectedFacility}

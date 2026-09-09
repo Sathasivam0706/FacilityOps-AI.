@@ -9,10 +9,25 @@ function sanitizeUser(user: UserData) {
 
 export async function login(req: Request, res: Response) {
   try {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ success: false, error: 'Email and password are required' });
+    const rawIdentifier = (req.body.userId || req.body.email || '').trim();
+    const password = req.body.password || req.body.pin || '';
+    const securIdPasscode = (req.body.securIdPasscode || req.body.tokenCode || req.body.passcode || '').toString().trim();
+
+    if (!rawIdentifier || !password) {
+      return res.status(400).json({ success: false, error: 'User ID and Password/PIN are required' });
     }
+
+    // Validate SecurID Passcode format if present or requested
+    if (securIdPasscode && !/^\d{6}$/.test(securIdPasscode)) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'SecurID Passcode must be a valid 6-digit synchronous token code' 
+      });
+    }
+
+    const email = rawIdentifier.includes('@') 
+      ? rawIdentifier.toLowerCase() 
+      : `${rawIdentifier.toLowerCase()}@apexhighrise.com`;
 
     const existingUser = await findUserByEmailDb(email);
 

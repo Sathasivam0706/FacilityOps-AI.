@@ -54,12 +54,17 @@ export async function fetchDashboardOverview() {
   };
 }
 
-export async function loginApi(email: string, password?: string) {
+export async function loginApi(emailOrUserId: string, password?: string, securIdPasscode?: string) {
   try {
     const res = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ 
+        userId: emailOrUserId, 
+        email: emailOrUserId, 
+        password,
+        securIdPasscode 
+      }),
     });
     const data = await res.json();
     if (res.ok && data.success) {
