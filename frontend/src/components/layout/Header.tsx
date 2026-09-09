@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Building2, Search, ChevronDown, FileText, Sparkles, Sliders, Check, Bell, User, X } from 'lucide-react';
+import { Building2, Search, ChevronDown, FileText, Sparkles, Sliders, Check, Bell, User, X, LogOut, Key, ShieldCheck, Settings } from 'lucide-react';
 import { AlertNotification } from '../../types';
 
 interface HeaderProps {
@@ -13,6 +13,8 @@ interface HeaderProps {
   user: { name: string; email: string; role: string } | null;
   selectedFacility: string;
   onSelectFacility: (facility: string) => void;
+  onLogout?: () => void;
+  onNavigateToLogin?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -26,8 +28,11 @@ export const Header: React.FC<HeaderProps> = ({
   user,
   selectedFacility,
   onSelectFacility,
+  onLogout,
+  onNavigateToLogin,
 }) => {
   const [isFacilityDropdownOpen, setIsFacilityDropdownOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchResults, setShowSearchResults] = useState(false);
 
@@ -211,18 +216,81 @@ export const Header: React.FC<HeaderProps> = ({
           <span className="hidden sm:inline">Simulate</span>
         </button>
 
-        {/* User Profile / Auth Button */}
-        <button
-          onClick={user ? onOpenProfileSettingsModal : onOpenAuthModal}
-          className="flex items-center space-x-1.5 p-1.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg transition-colors cursor-pointer"
-        >
-          <div className="w-6 h-6 rounded-md bg-slate-900 text-white font-extrabold flex items-center justify-center text-xs">
-            {user ? user.name[0] : <User className="w-3.5 h-3.5 text-cyan-300" />}
-          </div>
-          <span className="text-xs font-bold text-slate-800 hidden xl:inline">
-            {user ? user.name.split(' ')[0] : 'Sign In'}
-          </span>
-        </button>
+        {/* User Profile / Auth Menu */}
+        <div className="relative">
+          <button
+            onClick={() => {
+              if (user) {
+                setIsUserMenuOpen(!isUserMenuOpen);
+              } else if (onNavigateToLogin) {
+                onNavigateToLogin();
+              } else {
+                onOpenAuthModal();
+              }
+            }}
+            className="flex items-center space-x-1.5 p-1.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg transition-colors cursor-pointer"
+          >
+            <div className="w-6 h-6 rounded-md bg-slate-900 text-white font-extrabold flex items-center justify-center text-xs">
+              {user ? user.name[0] : <User className="w-3.5 h-3.5 text-cyan-300" />}
+            </div>
+            <span className="text-xs font-bold text-slate-800 hidden xl:inline">
+              {user ? user.name.split(' ')[0] : 'Sign In'}
+            </span>
+            {user && <ChevronDown className="w-3 h-3 text-slate-500 hidden sm:inline" />}
+          </button>
+
+          {/* User Account Popover Dropdown */}
+          {user && isUserMenuOpen && (
+            <div className="absolute right-0 mt-1.5 w-64 bg-white border border-slate-200 rounded-2xl shadow-2xl py-2 z-50 text-xs font-sans animate-in fade-in duration-100">
+              <div className="px-3.5 py-2 border-b border-slate-100 space-y-1">
+                <div className="font-extrabold text-slate-900 text-sm">{user.name}</div>
+                <div className="text-[11px] text-slate-500 font-mono truncate">{user.email}</div>
+                <span className="inline-block px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-cyan-50 text-cyan-800 border border-cyan-200">
+                  {user.role}
+                </span>
+              </div>
+
+              <div className="p-1 space-y-0.5">
+                <button
+                  onClick={() => {
+                    setIsUserMenuOpen(false);
+                    onOpenProfileSettingsModal();
+                  }}
+                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 flex items-center space-x-2 text-slate-700 cursor-pointer font-medium"
+                >
+                  <Settings className="w-3.5 h-3.5 text-slate-500" />
+                  <span>Profile & Facility Settings</span>
+                </button>
+
+                {onNavigateToLogin && (
+                  <button
+                    onClick={() => {
+                      setIsUserMenuOpen(false);
+                      onNavigateToLogin();
+                    }}
+                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 flex items-center space-x-2 text-slate-700 cursor-pointer font-medium"
+                  >
+                    <Key className="w-3.5 h-3.5 text-cyan-600" />
+                    <span>Switch Account / Portal</span>
+                  </button>
+                )}
+
+                {onLogout && (
+                  <button
+                    onClick={() => {
+                      setIsUserMenuOpen(false);
+                      onLogout();
+                    }}
+                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-rose-50 text-rose-700 flex items-center space-x-2 cursor-pointer font-bold border-t border-slate-100 mt-1"
+                  >
+                    <LogOut className="w-3.5 h-3.5 text-rose-600" />
+                    <span>Sign Out</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );

@@ -262,6 +262,13 @@ export const usersStore: UserData[] = [
     email: 'dave.miller@apexhighrise.com',
     role: 'Maintenance Tech',
     facilityId: 'apex-hq'
+  },
+  {
+    id: 'USR-004',
+    name: 'Elena Rostova',
+    email: 'elena.rostova@apexhighrise.com',
+    role: 'Energy Analyst',
+    facilityId: 'apex-hq'
   }
 ];
 

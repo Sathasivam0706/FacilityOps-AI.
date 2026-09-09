@@ -37,7 +37,8 @@ export type TabType =
   | 'alerts-workflows'
   | 'iot-telemetry'
   | 'reports'
-  | 'executive-reports';
+  | 'executive-reports'
+  | 'login';
 
 export interface FacilityMetric {
   id: string;

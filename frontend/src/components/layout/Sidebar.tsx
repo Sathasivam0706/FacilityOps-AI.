@@ -22,16 +22,20 @@ import {
   TrendingUp,
   Server,
   GitMerge,
-  Wallet
+  Wallet,
+  LogOut,
+  Lock
 } from 'lucide-react';
 import { TabType } from '../../types';
 
 interface SidebarProps {
   activeTab: TabType;
   onSelectTab: (tab: TabType) => void;
+  user?: { name: string; email: string; role: string } | null;
+  onLogout?: () => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onSelectTab }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onSelectTab, user, onLogout }) => {
   const [navMode, setNavMode] = useState<'dashboards' | 'core-ops'>('dashboards');
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({
     energy: true,
@@ -817,6 +821,55 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onSelectTab }) => {
             </div>
           </div>
         </div>
+
+        {/* User Account & Session Card */}
+        {user ? (
+          <div className="pt-2">
+            <div className="p-2.5 bg-white border border-slate-200 rounded-xl space-y-2 shadow-2xs">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2 min-w-0">
+                  <div className="w-7 h-7 rounded-lg bg-slate-900 text-white font-bold flex items-center justify-center text-xs shrink-0">
+                    {user.name[0]}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-xs font-extrabold text-slate-900 truncate leading-tight">
+                      {user.name}
+                    </div>
+                    <div className="text-[10px] text-slate-500 truncate leading-tight">
+                      {user.role}
+                    </div>
+                  </div>
+                </div>
+                {onLogout && (
+                  <button
+                    onClick={onLogout}
+                    title="Sign Out to Login Page"
+                    className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer shrink-0"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+              <button
+                onClick={() => onSelectTab('login')}
+                className="w-full py-1.5 px-2 bg-slate-100 hover:bg-slate-200 text-[10px] font-semibold text-slate-700 rounded-lg transition-colors flex items-center justify-center space-x-1.5 cursor-pointer"
+              >
+                <Lock className="w-3 h-3 text-slate-500" />
+                <span>Switch Account / Portal</span>
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="pt-2">
+            <button
+              onClick={() => onSelectTab('login')}
+              className="w-full py-2 px-3 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl shadow-xs transition-colors flex items-center justify-center space-x-2 cursor-pointer"
+            >
+              <Lock className="w-3.5 h-3.5 text-cyan-400" />
+              <span>Login to Console</span>
+            </button>
+          </div>
+        )}
       </div>
     </aside>
   );
